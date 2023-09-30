@@ -5,6 +5,7 @@ import authRouter from "./routes/auth.js";
 import hotelRouter from "./routes/hotels.js";
 import roomRouter from "./routes/rooms.js";
 import userRouter from "./routes/users.js";
+import cookieParser from "cookie-parser";
 const app = express();      
 dotenv.config();
 
@@ -22,9 +23,18 @@ try{
 };
 
 // middlewares
-
+app.use(cookieParser());
 app.use(express.json());
-app.use("/auth")
+app.use("/api/auth", authRouter);
+app.use("/api/hotels", hotelRouter);
+app.use("/api/rooms", roomRouter);
+app.use("/api/users", userRouter);
+
+app.use((err,req,res,next) => {
+    const errorStatus = err.status || 500;
+    const errorMessage = err.message || "Something went wrong";
+    res.status(errorStatus).json({message: errorMessage});                 
+});
 
 app.listen(8000, () => {
     connect();
