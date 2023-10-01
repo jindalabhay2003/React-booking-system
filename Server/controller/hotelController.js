@@ -30,6 +30,15 @@ export const deleteHotel = async (req, res,next) => {
     }
 }
 
+export const getHotel = async (req, res, next) => {
+    try{
+        const hotel = await Hotel.findById(req.params.id);
+        res.status(200).json(hotel);
+    }catch(error){
+        next(error);
+    }
+}
+
 export const getHotels = async (req, res, next) => {
     try{
         const hotels = await Hotel.find();
@@ -39,12 +48,27 @@ export const getHotels = async (req, res, next) => {
     }
 }
 
-export const getHotel = async (req, res, next) => {
+export const countByCity = async (req, res, next) => {
+    const cities = req.query.cities.split(",");
     try{
-        const hotel = await Hotel.findById(req.params.id);
-        res.status(200).json(hotel);
+        const list = await Promise.all(cities.map(city=>{
+            return Hotel.countDocuments({city:city});
+        }))
+        const hotels = await Hotel.find();
+        res.status(200).json(list);
     }catch(error){
         next(error);
     }
 }
+
+export const countByType = async (req, res, next) => {
+    try{
+        const hotels = await Hotel.find();
+        res.status(200).json(hotels);
+    }catch(error){
+        next(error);
+    }
+}
+
+
 
