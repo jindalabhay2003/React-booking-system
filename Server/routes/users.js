@@ -6,7 +6,7 @@ import { updateUser, deleteUser,getUser,getUsers } from "../controller/userContr
 const router = express.Router();
 
 router.post("/register", register);
-router.get("/login", login);                                     
+router.post("/login", login);                                     
 router.put("/:id",verifyUser, updateUser);
 router.delete("/:id", verifyUser, deleteUser);
 router.get("/",verifyAdmin, getUsers);
