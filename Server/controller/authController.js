@@ -4,22 +4,21 @@ import JWT from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 export const register = async (req, res, next) => {
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
-
-    try{
-        const newUser  = new User({
-            username: req.body.username,
-            email: req.body.email,
-            password: hashedPassword,
-        });
-        const user = await newUser.save();
-        res.status(201).json(user);
-    }catch(err){
-        next(err);
+    try {
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(req.body.password, salt);
+  
+      const newUser = new User({
+        ...req.body,
+        password: hash,
+      });
+  
+      await newUser.save();
+      res.status(200).send("User has been created.");
+    } catch (err) {
+      next(err);
     }
-}
+  };
 
 export const login = async (req, res, next) => {
     try {
